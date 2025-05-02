@@ -71,15 +71,41 @@ class ClienteDAO:
                 cursor.close()
                 Conexion.liberar_conexion(conexion)
 
+    @classmethod
+    def eliminar(cls, cliente):
+        conexion = None
+        try:
+            conexion = Conexion.obtener_conexion()
+            cursor = conexion.cursor()
+
+            valores = (cliente.id,)
+            cursor.execute(ClienteDAO.ELIMINAR, valores)
+            conexion.commit()
+
+            return cursor.rowcount
+
+        except Exception as e:
+            print(f"Ocurrio un error al eliminar el cliente:  {e}")
+        finally:
+            if conexion is not None:
+                cursor.close()
+                Conexion.liberar_conexion(conexion)
+
 if __name__ == "__main__":
     # Insertar cliente
     # cliente1 = Cliente(nombre="Alejandra", apellido="Tellez", membresia=300)
     # clientes_actualizados = ClienteDAO.insertar(cliente1)
     # print(f"Clientes insertados: {clientes_actualizados}")
 
-    cliente_actualizar = Cliente(5, "Alexa", "Tellez", 400)
-    clientes_actualizados = ClienteDAO.actualizar(cliente_actualizar)
-    print(f"Clientes actualizados: {clientes_actualizados}")
+    # Actualizar cliente
+    # cliente_actualizar = Cliente(5, "Alexa", "Tellez", 400)
+    # clientes_actualizados = ClienteDAO.actualizar(cliente_actualizar)
+    # print(f"Clientes actualizados: {clientes_actualizados}")
+
+    # Eliminar cliente
+    cliente_eliminar = Cliente(id=5)
+    clientes_eliminados = ClienteDAO.eliminar(cliente_eliminar)
+    print(f"Clientes eliminados: {clientes_eliminados}")
 
     # Seleccionar los clientes
     clientes = ClienteDAO.seleccionar()
